@@ -1,5 +1,6 @@
 package kodlamaio.hrms.business.concretes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,8 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		else if(!isCityExist(jobAdvertisement)) {
 			return new ErrorDataResult<JobAdvertisement>(null,"Şehir bulunamadı");
 		}
+		LocalDate e = LocalDate.now();
+		jobAdvertisement.setCreatedDate(e);
 		return new SuccessDataResult<JobAdvertisement>(this.jobAdvertisementDao.save(jobAdvertisement),"İş ilanı başarılı bir şekilde paylaşıldı");
 	}
 	
