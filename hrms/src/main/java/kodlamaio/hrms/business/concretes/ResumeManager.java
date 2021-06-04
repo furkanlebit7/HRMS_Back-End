@@ -1,11 +1,14 @@
 package kodlamaio.hrms.business.concretes;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kodlamaio.hrms.business.abstracts.ResumeService;
+import kodlamaio.hrms.core.utilities.cloudinary.CloudinaryService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
@@ -30,17 +33,19 @@ public class ResumeManager implements ResumeService{
 	private ResumeExperienceDao resumeExperienceDao;
 	private ResumeTechDao resumeTechDao;
 
-	
+	private CloudinaryService cloudinaryService;
 
+	
 	@Autowired
 	public ResumeManager(ResumeDao resumeDao, ResumeSchoolDao resumeSchoolDao, ResumeLanguageDao resumeLanguageDao,
-			ResumeExperienceDao resumeExperienceDao, ResumeTechDao resumeTechDao) {
+			ResumeExperienceDao resumeExperienceDao, ResumeTechDao resumeTechDao, CloudinaryService cloudinaryService) {
 		super();
 		this.resumeDao = resumeDao;
 		this.resumeSchoolDao = resumeSchoolDao;
 		this.resumeLanguageDao = resumeLanguageDao;
 		this.resumeExperienceDao = resumeExperienceDao;
 		this.resumeTechDao = resumeTechDao;
+		this.cloudinaryService = cloudinaryService;
 	}
 
 	@Override
@@ -92,6 +97,18 @@ public class ResumeManager implements ResumeService{
 			resumeTechs.setResume(resume);
 			resumeTechDao.save(resumeTechs);
 		}
+	}
+
+	@Override
+	public Result uploadImage(MultipartFile file, int resumeId) {
+
+		Map<String, String> uploader = (Map<String, String>) 
+				cloudinaryService.save(file).getData(); 
+		String imageUrl= uploader.get("url");
+		Resume Cv = resumeDao.getOne(resumeId);
+		Cv.setCandidatePhoto(imageUrl);
+		resumeDao.save(Cv);
+		return new SuccessResult("Kayıt Başarılı");
 	}
 
 }
