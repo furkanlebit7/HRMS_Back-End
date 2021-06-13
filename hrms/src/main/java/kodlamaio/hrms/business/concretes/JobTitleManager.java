@@ -41,6 +41,9 @@ public class JobTitleManager implements JobTitleService{
 			
 			return new SuccessDataResult<JobTitle>(this.jobTitleDao.save(jobTitle),"İş Pozisyonu başarılı bir şekilde eklendi");
 	}
+
+	
+	
 	
 
 

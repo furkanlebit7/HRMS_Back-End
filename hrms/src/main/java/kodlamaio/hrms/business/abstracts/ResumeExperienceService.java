@@ -7,4 +7,5 @@ import kodlamaio.hrms.entities.concretes.ResumeExperience;
 
 public interface ResumeExperienceService {
 	DataResult<List<ResumeExperience>> getAll();
+	DataResult<List<ResumeExperience>> findAllByResumeId(int id);
 }

@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -62,6 +64,7 @@ public class ResumeExperience {
 		@JoinColumn(name="position_id")
 		private JobTitle jobTitle;
 		
+		@JsonProperty(access=Access.WRITE_ONLY)
 		@ManyToOne()
 		@JoinColumn(name="resume_id")
 		private Resume resume;

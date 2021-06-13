@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "resume"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","resume"})
 @Table(name="resume_schools")
 public class ResumeSchools {
 	
@@ -33,6 +33,9 @@ public class ResumeSchools {
 	@Column(name="id")
 	private int id;
 	
+	@Column(name="school_name")
+	private String schoolName;
+	
 	//@Column(name="resume_id")
 	//private int resumeId;
 	
@@ -40,17 +43,12 @@ public class ResumeSchools {
 	private String degree;
 	
 	@Column(name="department")
-	@NotNull
-	@NotBlank
 	private String department;
 	
 	@Column(name="started_date")
-	@NotNull
-	@NotBlank
 	private Date startedDate;
 	
 	@Column(name="is_going")
-	@NotNull
 	private boolean isGoing;
 	
 	@Column(name="end_date")

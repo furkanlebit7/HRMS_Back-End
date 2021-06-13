@@ -3,15 +3,22 @@ package kodlamaio.hrms.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kodlamaio.hrms.business.abstracts.EmployerService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
+import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.entities.concretes.Employer;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/employers")
 public class EmployerController {
@@ -30,7 +37,13 @@ public class EmployerController {
 	}
 	
 	@PostMapping("/add")
-	public DataResult<Employer> add(Employer employer){
+	public DataResult<Employer> add(@RequestBody Employer employer){
 		return this.employerService.add(employer);
+	}
+	
+	@PutMapping("/uploadImage")
+	public Result saveImage(@RequestBody MultipartFile file,@RequestParam int employerId) {
+		return this.employerService.uploadImage(file, employerId);
+		
 	}
 }

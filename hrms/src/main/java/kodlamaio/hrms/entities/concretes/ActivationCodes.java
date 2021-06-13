@@ -1,6 +1,7 @@
 package kodlamaio.hrms.entities.concretes;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +34,7 @@ public class ActivationCodes {
 	private boolean isConfirmed;
 	
 	@Column(name="confirmed_date")
-	private Date confirmedDate;
+	private LocalDate confirmedDate;
 	
 	@Column(name="user_id")
 	private int userId;

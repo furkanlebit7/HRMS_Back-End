@@ -45,13 +45,11 @@ public class JobAdvertisement {
 	@Column(name="number_of_position")
 	int numberOfPosition;
 	
-	
 	@Column(name="min_salary")
 	int minSalary;
 	
 	@Column(name="max_salary")
 	int maxSalary;
-	
 	
 	@Column(name="last_date")
 	private LocalDate lastDate;
@@ -61,6 +59,12 @@ public class JobAdvertisement {
 	
 	@Column(name="is_active")
 	private boolean isActive;
+	
+	@Column(name="job_feature")
+	private String jobFeature;
+	
+	@Column(name="job_type")
+	private String jobType;
 	
 	@ManyToOne()
 	@JoinColumn(name="job_title_id")

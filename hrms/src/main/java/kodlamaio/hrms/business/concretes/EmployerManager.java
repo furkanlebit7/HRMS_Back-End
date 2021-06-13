@@ -1,20 +1,26 @@
 package kodlamaio.hrms.business.concretes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kodlamaio.hrms.business.abstracts.ActivationCodeService;
 import kodlamaio.hrms.business.abstracts.EmployerService;
 import kodlamaio.hrms.business.abstracts.UserService;
+import kodlamaio.hrms.core.utilities.cloudinary.CloudinaryService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.ErrorDataResult;
+import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
+import kodlamaio.hrms.core.utilities.results.SuccessResult;
 import kodlamaio.hrms.dataAccess.abstracts.EmployerDao;
 import kodlamaio.hrms.entities.concretes.ActivationCodes;
 import kodlamaio.hrms.entities.concretes.Employer;
+import kodlamaio.hrms.entities.concretes.Resume;
 import kodlamaio.hrms.entities.concretes.User;
 
 @Service
@@ -23,13 +29,16 @@ public class EmployerManager implements EmployerService{
 	private EmployerDao employerDao;
 	private ActivationCodeService activationCodeService;
 	private UserService userService;
+
+	private CloudinaryService cloudinaryService;
 	
 	public EmployerManager(EmployerDao employerDao, ActivationCodeService activationCodeService,
-			UserService userService) {
+			UserService userService,CloudinaryService cloudinaryService) {
 		super();
 		this.employerDao = employerDao;
 		this.activationCodeService = activationCodeService;
 		this.userService = userService;
+		this.cloudinaryService = cloudinaryService;
 	}
 
 	@Override
@@ -125,6 +134,18 @@ public class EmployerManager implements EmployerService{
 	@Override
 	public DataResult<List<Employer>> getAll() {
 		return new SuccessDataResult<List<Employer>>(this.employerDao.findAll(),"Başarılı Şekilde Employer Listelendi");
+	}
+	
+	@Override
+	public Result uploadImage(MultipartFile file, int employerId) {
+
+		Map<String, String> uploader = (Map<String, String>) 
+				cloudinaryService.save(file).getData(); 
+		String imageUrl= uploader.get("url");
+		Employer employer = employerDao.getOne(employerId);
+		employer.setCompanyLogo(imageUrl);
+		employerDao.save(employer);
+		return new SuccessResult("Kayıt Başarılı");
 	}
 
 }

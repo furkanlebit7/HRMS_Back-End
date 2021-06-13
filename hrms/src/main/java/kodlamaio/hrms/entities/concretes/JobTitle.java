@@ -37,7 +37,4 @@ public class JobTitle {
 	@OneToMany(mappedBy="jobTitle")
 	private List<JobAdvertisement> jobAdvertisement;
 	
-	@OneToMany(mappedBy="jobTitle")
-	private List<ResumeExperience> resumeExperience;
-	
 }

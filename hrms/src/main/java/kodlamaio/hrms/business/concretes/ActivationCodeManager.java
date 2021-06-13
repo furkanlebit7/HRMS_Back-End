@@ -1,5 +1,7 @@
 package kodlamaio.hrms.business.concretes;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +34,6 @@ public class ActivationCodeManager implements ActivationCodeService{
 						CodeGenerator generator = new CodeGenerator();
 						code.setActivationCode(generator.create());
 						code.setUserId(id);
-				
 						
 							
 						activationCodeDao.save(code);
@@ -47,6 +48,8 @@ public class ActivationCodeManager implements ActivationCodeService{
 			ActivationCodes ref = activationCodeDao.findByUserId(id).stream().findFirst().get();
 			if(ref.getActivationCode().equals(verificationCode) && ref.isConfirmed() != true) {
 				ref.setConfirmed(true);
+				LocalDate e = LocalDate.now();
+				ref.setConfirmedDate(e);
 				return  new SuccessDataResult<ActivationCodes>(this.activationCodeDao.save(ref),"Başarılı");
 			}
 			else if(ref.isConfirmed() == true) {

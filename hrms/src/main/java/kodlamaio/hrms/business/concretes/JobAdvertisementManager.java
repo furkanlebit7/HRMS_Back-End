@@ -4,18 +4,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties.Job;
 import org.springframework.stereotype.Service;
 
 import kodlamaio.hrms.business.abstracts.JobAdvertisementService;
+import kodlamaio.hrms.core.utilities.converters.DtoConvertService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.ErrorDataResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
+import kodlamaio.hrms.core.utilities.results.SuccessResult;
 import kodlamaio.hrms.dataAccess.abstracts.CityDao;
 import kodlamaio.hrms.dataAccess.abstracts.EmployerDao;
 import kodlamaio.hrms.dataAccess.abstracts.JobAdvertisementDao;
+import kodlamaio.hrms.dataAccess.abstracts.JobTitleDao;
 import kodlamaio.hrms.entities.concretes.JobAdvertisement;
+import kodlamaio.hrms.entities.dtos.JobAdvertisementDto;
 
 @Service
 public class JobAdvertisementManager implements JobAdvertisementService{
@@ -23,12 +26,19 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 	private JobAdvertisementDao jobAdvertisementDao;
 	private EmployerDao employerDao;
 	private CityDao cityDao;
+	private JobTitleDao jobTitleDao;
+	private DtoConvertService dtoConvertService;
+	
 	
 	@Autowired
-	public JobAdvertisementManager(JobAdvertisementDao jobAdvertisementDao,EmployerDao employerDao,CityDao cityDao) {
-		this.jobAdvertisementDao=jobAdvertisementDao;
-		this.employerDao=employerDao;
-		this.cityDao=cityDao;
+	public JobAdvertisementManager(JobAdvertisementDao jobAdvertisementDao, EmployerDao employerDao, CityDao cityDao,
+			JobTitleDao jobTitleDao, DtoConvertService dtoConvertService) {
+		super();
+		this.jobAdvertisementDao = jobAdvertisementDao;
+		this.employerDao = employerDao;
+		this.cityDao = cityDao;
+		this.jobTitleDao = jobTitleDao;
+		this.dtoConvertService = dtoConvertService;
 	}
 
 	@Override
@@ -37,15 +47,15 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 	}
 
 	@Override
-	public Result add(JobAdvertisement jobAdvertisement) {
+	public Result add(JobAdvertisementDto jobAdvertisement) {
 		if(!jobPositionChecker(jobAdvertisement)) {
-			return new ErrorDataResult<JobAdvertisement>(null,"İş Pozisyonu alanı zorunludur");
+			return new ErrorDataResult<JobAdvertisement>(null,"İş pozisyonu bulunamadı");
 		}
 		else if(!jobDescriptionChecker(jobAdvertisement)) {
 			return new ErrorDataResult<JobAdvertisement>(null,"İş Açıklaması alanı zorunludur");
 		}
 		else if(!jobCityChecker(jobAdvertisement)) {
-			return new ErrorDataResult<JobAdvertisement>(null,"İl bilgisi alanı zorunludur");
+			return new ErrorDataResult<JobAdvertisement>(null,"İl bulunamadı");
 		}
 		else if(!jobMinSalaryController(jobAdvertisement)) {
 			return new ErrorDataResult<JobAdvertisement>(null,"Minimum değer sıfırın altında veya Maksimum değer üstünde olamaz");
@@ -62,12 +72,12 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		else if(!isEmployerExist(jobAdvertisement)) {
 			return new ErrorDataResult<JobAdvertisement>(null,"İş Veren bulunamadı");			
 		}
-		else if(!isCityExist(jobAdvertisement)) {
-			return new ErrorDataResult<JobAdvertisement>(null,"Şehir bulunamadı");
-		}
+		
 		LocalDate e = LocalDate.now();
 		jobAdvertisement.setCreatedDate(e);
-		return new SuccessDataResult<JobAdvertisement>(this.jobAdvertisementDao.save(jobAdvertisement),"İş ilanı başarılı bir şekilde paylaşıldı");
+		jobAdvertisement.setActive(false);
+		this.jobAdvertisementDao.save((JobAdvertisement) dtoConvertService.dtoClassConverter(jobAdvertisement, JobAdvertisement.class));
+		return new SuccessResult("İş ilanı başarılı bir şekilde eklendi");
 	}
 	
 	
@@ -75,11 +85,15 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 	public DataResult<List<JobAdvertisement>> findAllByIsActive() {
 		return new SuccessDataResult <List<JobAdvertisement>>(this.jobAdvertisementDao.findAllByIsActive(true),"Başarılı");
 	}
+	
+	
 
 	@Override
 	public DataResult<List<JobAdvertisement>> findAllByIsActiveOrderByCreatedDateDesc() {
 		return new SuccessDataResult <List<JobAdvertisement>>(this.jobAdvertisementDao.findAllByIsActiveOrderByCreatedDateDesc(true),"Başarılı");
 	}
+	
+	
 
 	@Override
 	public DataResult<List<JobAdvertisement>> findAllByIsActiveAndEmployerId(int employerId) {
@@ -91,6 +105,8 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		}
 	}
 
+	
+	
 	@Override
 	public DataResult<JobAdvertisement> setJobAdvertisementDisabled(int id) {
 		if(!this.jobAdvertisementDao.existsById(id)) {
@@ -107,59 +123,60 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 	//*****************************************         CONTROLLERS             ********************************************
 	
 	
-	private boolean jobPositionChecker(JobAdvertisement jobAdvertisement) {
-		if(jobAdvertisement.getJobTitle().getTitle().isBlank()|| jobAdvertisement.getJobTitle().getTitle().equals(null)) {
+	private boolean jobPositionChecker(JobAdvertisementDto jobAdvertisement) {
+		if(!jobTitleDao.existsById(jobAdvertisement.getJobTitleId())) {
 			return false;
 		}
 		return true;
 	}
-	private boolean jobDescriptionChecker(JobAdvertisement jobAdvertisement) {
+	private boolean jobDescriptionChecker(JobAdvertisementDto jobAdvertisement) {
 		if(jobAdvertisement.getDescription().isEmpty()) {
 			return false;
 		}
 		return true;
 	}
-	private boolean jobCityChecker(JobAdvertisement jobAdvertisement) {
-		if(jobAdvertisement.getCity().getCityName().isBlank()|| jobAdvertisement.getCity().getCityName().equals(null)) {
+	private boolean jobCityChecker(JobAdvertisementDto jobAdvertisement) {
+		if(!cityDao.existsById(jobAdvertisement.getCityId())) {
 			return false;
 		}
 		return true;
 	}
-	private boolean jobMinSalaryController(JobAdvertisement jobAdvertisement) {
-		if(jobAdvertisement.getMinSalary()<0 || jobAdvertisement.getMinSalary()>=jobAdvertisement.getMaxSalary()) {
-			return false;
+	private boolean jobMinSalaryController(JobAdvertisementDto jobAdvertisement) {
+		if(jobAdvertisement.getMinSalary()>0) {
+			if(jobAdvertisement.getMinSalary()<0 || jobAdvertisement.getMinSalary()>=jobAdvertisement.getMaxSalary()) {
+				return false;
+			}
+			return true;
 		}
 		return true;
+		
 	}
-	private boolean jobMaxSalaryController(JobAdvertisement jobAdvertisement) {
-		if(jobAdvertisement.getMaxSalary()<0 || jobAdvertisement.getMaxSalary()<=jobAdvertisement.getMinSalary()) {
-			return false;
+	private boolean jobMaxSalaryController(JobAdvertisementDto jobAdvertisement) {
+		if(jobAdvertisement.getMaxSalary()>0) {
+			if(jobAdvertisement.getMaxSalary()<0 || jobAdvertisement.getMaxSalary()<=jobAdvertisement.getMinSalary()) {
+				return false;
+			}
+			return true;
 		}
 		return true;
+		
 	}
-	private boolean jobNumberChecker(JobAdvertisement jobAdvertisement) {
+	private boolean jobNumberChecker(JobAdvertisementDto jobAdvertisement) {
 		if(jobAdvertisement.getNumberOfPosition()<=0) {
 			return false;
 		}
 		return true;
 	}
 	
-	private boolean jobDateChecker(JobAdvertisement jobAdvertisement) {
+	private boolean jobDateChecker(JobAdvertisementDto jobAdvertisement) {
 		if(jobAdvertisement.getLastDate()==null) {
 			return false;
 		}
 		return true;
 	}
 	
-	private boolean isEmployerExist(JobAdvertisement jobAdvertisement) {
-		if(!this.employerDao.existsById(jobAdvertisement.getEmployer().getId())) {
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean isCityExist(JobAdvertisement jobAdvertisement) {
-		if(!this.cityDao.existsById(jobAdvertisement.getCity().getId())) {
+	private boolean isEmployerExist(JobAdvertisementDto jobAdvertisement) {
+		if(!this.employerDao.existsById(jobAdvertisement.getEmployerId())) {
 			return false;
 		}
 		return true;

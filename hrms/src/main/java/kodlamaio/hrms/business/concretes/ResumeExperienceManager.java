@@ -27,4 +27,9 @@ public class ResumeExperienceManager implements ResumeExperienceService{
 		return new SuccessDataResult<List<ResumeExperience>>(this.resumeExperienceDao.findAll(),"Resume Deneyimleri listelendi");
 	}
 
+	@Override
+	public DataResult<List<ResumeExperience>> findAllByResumeId(int id) {
+		return new SuccessDataResult<List<ResumeExperience>>(this.resumeExperienceDao.findAllByResumeId(id));
+	}
+
 }

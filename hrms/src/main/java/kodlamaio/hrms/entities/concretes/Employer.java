@@ -33,6 +33,10 @@ public class Employer extends User{
 	@Column(name="is_activated")
 	private boolean isActivated;
 	
+	@Column(name="company_logo")
+	private String companyLogo;
+	
+	
 	@OneToMany(mappedBy="employer")
 	private List<JobAdvertisement> jobAdvertisement;
 }
