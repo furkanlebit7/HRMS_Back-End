@@ -8,4 +8,5 @@ SWAGGER CONTROLS
 
 HRMS DATABASE DESIGN!
 
-![hrmsdatabase](https://user-images.githubusercontent.com/59422278/120102227-a4b90500-c152-11eb-915c-a48efbcb697a.png)
+![Screenshot_1](https://user-images.githubusercontent.com/59422278/121809049-f8077900-cc63-11eb-90ab-9843703c3ae7.png)
+
