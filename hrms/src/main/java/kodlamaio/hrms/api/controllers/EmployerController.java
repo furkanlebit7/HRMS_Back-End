@@ -46,4 +46,8 @@ public class EmployerController {
 		return this.employerService.uploadImage(file, employerId);
 		
 	}
+	@GetMapping("/verifyChecker")
+	Result verifyChecker(Integer employerId) {
+		return this.employerService.verifyChecker(employerId);
+	}
 }

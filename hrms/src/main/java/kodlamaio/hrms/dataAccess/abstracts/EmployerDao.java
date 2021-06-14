@@ -8,4 +8,5 @@ import kodlamaio.hrms.entities.concretes.Employer;
 
 public interface EmployerDao extends JpaRepository<Employer, Integer>{
 	List<Employer> findAllByEmail(String email);
+	Employer findOneById(Integer id);
 }

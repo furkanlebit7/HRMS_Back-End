@@ -117,6 +117,16 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		return new SuccessDataResult <JobAdvertisement>(this.jobAdvertisementDao.save(jA),"İş İlanı Pasif olarak ayarlandı");
 	}
 	
+	@Override
+	public DataResult<JobAdvertisement> setJobAdvertisementActive(int id) {
+		if(!this.jobAdvertisementDao.existsById(id)) {
+			return new ErrorDataResult("Hata: İş ilanı bulunamadı");
+		}
+		JobAdvertisement jA =  this.jobAdvertisementDao.getOne(id);
+		jA.setActive(true);
+		return new SuccessDataResult <JobAdvertisement>(this.jobAdvertisementDao.save(jA),"İş İlanı Aktif olarak ayarlandı");
+	}
+	
 	
 	
 	
@@ -181,6 +191,8 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		}
 		return true;
 	}
+
+	
 	
 
 }

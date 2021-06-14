@@ -5,21 +5,26 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.hibernate.hql.internal.ast.ErrorReporter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kodlamaio.hrms.business.abstracts.ActivationCodeService;
+import kodlamaio.hrms.business.abstracts.EmployerActivationByEmployeeService;
 import kodlamaio.hrms.business.abstracts.EmployerService;
 import kodlamaio.hrms.business.abstracts.UserService;
 import kodlamaio.hrms.core.utilities.cloudinary.CloudinaryService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.ErrorDataResult;
+import kodlamaio.hrms.core.utilities.results.ErrorResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
 import kodlamaio.hrms.core.utilities.results.SuccessResult;
 import kodlamaio.hrms.dataAccess.abstracts.EmployerDao;
 import kodlamaio.hrms.entities.concretes.ActivationCodes;
 import kodlamaio.hrms.entities.concretes.Employer;
+import kodlamaio.hrms.entities.concretes.EmployerActivationByEmployee;
 import kodlamaio.hrms.entities.concretes.Resume;
 import kodlamaio.hrms.entities.concretes.User;
 
@@ -29,15 +34,19 @@ public class EmployerManager implements EmployerService{
 	private EmployerDao employerDao;
 	private ActivationCodeService activationCodeService;
 	private UserService userService;
-
+	private EmployerActivationByEmployeeService employerActivationByEmployeeService;
 	private CloudinaryService cloudinaryService;
 	
+	
+	@Autowired
 	public EmployerManager(EmployerDao employerDao, ActivationCodeService activationCodeService,
-			UserService userService,CloudinaryService cloudinaryService) {
+			UserService userService, EmployerActivationByEmployeeService employerActivationByEmployeeService,
+			CloudinaryService cloudinaryService) {
 		super();
 		this.employerDao = employerDao;
 		this.activationCodeService = activationCodeService;
 		this.userService = userService;
+		this.employerActivationByEmployeeService = employerActivationByEmployeeService;
 		this.cloudinaryService = cloudinaryService;
 	}
 
@@ -147,5 +156,20 @@ public class EmployerManager implements EmployerService{
 		employerDao.save(employer);
 		return new SuccessResult("Kayıt Başarılı");
 	}
+
+	@Override
+	public Result verifyChecker(Integer employerId) {
+		if(employerActivationByEmployeeService.existsByEmployerId(employerId) &&
+				activationCodeService.findOneById(employerId).getData().isConfirmed()) {
+			Employer e = employerDao.getOne(employerId);
+			e.setActivated(true);
+			employerDao.save(e);
+			return new SuccessResult("her iki taraflı da onaylı");
+		}
+		
+		return new ErrorResult("iki taraflı onay almamış");
+	}
+	
+	
 
 }

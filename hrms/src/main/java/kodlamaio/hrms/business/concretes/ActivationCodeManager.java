@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kodlamaio.hrms.business.abstracts.ActivationCodeService;
+import kodlamaio.hrms.business.abstracts.EmployerActivationByEmployeeService;
+import kodlamaio.hrms.business.abstracts.EmployerService;
 import kodlamaio.hrms.core.utilities.CodeGenerator;
+import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.ErrorDataResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
@@ -35,7 +38,6 @@ public class ActivationCodeManager implements ActivationCodeService{
 						code.setActivationCode(generator.create());
 						code.setUserId(id);
 						
-							
 						activationCodeDao.save(code);
 						
 					}
@@ -49,7 +51,7 @@ public class ActivationCodeManager implements ActivationCodeService{
 			if(ref.getActivationCode().equals(verificationCode) && ref.isConfirmed() != true) {
 				ref.setConfirmed(true);
 				LocalDate e = LocalDate.now();
-				ref.setConfirmedDate(e);
+				ref.setConfirmedDate(e);				
 				return  new SuccessDataResult<ActivationCodes>(this.activationCodeDao.save(ref),"Başarılı");
 			}
 			else if(ref.isConfirmed() == true) {
@@ -57,10 +59,12 @@ public class ActivationCodeManager implements ActivationCodeService{
 			}
 			return  new ErrorDataResult<ActivationCodes>(null,"Doğrulama Kodu Geçersiz");
 			
-			
-			
-			
-			
-			
 		}
-}
+			
+			
+		@Override
+		public DataResult<ActivationCodes> findOneById(Integer id) {
+			return new SuccessDataResult<ActivationCodes>(this.activationCodeDao.findByUserId(id).stream().findFirst().get(),"bulundu");
+		}
+		
+	}

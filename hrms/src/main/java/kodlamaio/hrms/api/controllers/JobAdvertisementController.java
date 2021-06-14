@@ -58,6 +58,11 @@ public class JobAdvertisementController {
 		return this.jobAdvertisementService.setJobAdvertisementDisabled(id);
 	}
 	
+	@GetMapping("/setAdvertisementActive")
+	DataResult<JobAdvertisement> setJobAdvertisementActive(@RequestParam int id){
+		return this.jobAdvertisementService.setJobAdvertisementActive(id);
+	}
+	
 	
 	
 	
