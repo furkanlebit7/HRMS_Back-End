@@ -63,6 +63,15 @@ public class JobAdvertisementController {
 		return this.jobAdvertisementService.setJobAdvertisementActive(id);
 	}
 	
+	@GetMapping("/getFourAdvertisement")
+	DataResult<List<JobAdvertisement>>getJobAdvertisementFour(){
+		return this.jobAdvertisementService.getJobAdvertisementFour();
+	}
+	
+	@GetMapping("/getAllPageable")
+	DataResult<List<JobAdvertisement>> getAllPageable(int pageNo,int pageSize){
+		return this.jobAdvertisementService.getAllPageable(pageNo, pageSize);
+	}
 	
 	
 	

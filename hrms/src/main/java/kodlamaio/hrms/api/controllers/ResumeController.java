@@ -17,6 +17,7 @@ import kodlamaio.hrms.business.abstracts.ResumeService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.entities.concretes.Resume;
+import kodlamaio.hrms.entities.concretes.ResumeSchools;
 
 @CrossOrigin
 @RestController
@@ -46,9 +47,11 @@ public class ResumeController {
 		return this.resumeService.findByCandidateId(id);
 	}
 	
-	@PutMapping("/uploadImage")
-	public Result saveImage(@RequestBody MultipartFile file,@RequestParam int resumeId) {
-		return this.resumeService.uploadImage(file, resumeId);
-		
+	@PostMapping("/updateResume")
+	Result updateResume(@RequestBody Resume resume) {
+		return this.resumeService.updateResume(resume);
 	}
+	
+	
+	
 }

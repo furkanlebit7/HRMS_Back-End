@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kodlamaio.hrms.business.abstracts.JobAdvertisementService;
@@ -128,6 +130,18 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 	}
 	
 	
+	@Override
+	public DataResult<List<JobAdvertisement>> getJobAdvertisementFour() {
+		return new SuccessDataResult<List<JobAdvertisement>>(this.jobAdvertisementDao.getJobAdvertisementFour(PageRequest.of(1, 4)),"Başarılı");
+	}
+	
+	
+	@Override
+	public DataResult<List<JobAdvertisement>> getAllPageable(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		return new SuccessDataResult<List<JobAdvertisement>>(this.jobAdvertisementDao.findAll(pageable).getContent());
+	}
+	
 	
 	
 	//*****************************************         CONTROLLERS             ********************************************
@@ -191,6 +205,10 @@ public class JobAdvertisementManager implements JobAdvertisementService{
 		}
 		return true;
 	}
+
+	
+
+	
 
 	
 	

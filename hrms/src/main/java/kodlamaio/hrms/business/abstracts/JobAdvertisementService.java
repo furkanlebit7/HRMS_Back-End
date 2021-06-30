@@ -22,4 +22,8 @@ public interface JobAdvertisementService {
 	DataResult<JobAdvertisement> setJobAdvertisementDisabled(int id);
 	
 	DataResult<JobAdvertisement> setJobAdvertisementActive(int id);
+	
+	DataResult<List<JobAdvertisement>>getJobAdvertisementFour();
+	
+	DataResult<List<JobAdvertisement>> getAllPageable(int pageNo,int pageSize);
 }

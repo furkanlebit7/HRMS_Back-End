@@ -1,6 +1,6 @@
 package kodlamaio.hrms.entities.concretes;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,13 +44,13 @@ public class ResumeSchools {
 	private String department;
 	
 	@Column(name="started_date")
-	private Date startedDate;
+	private LocalDate startedDate;
 	
 	@Column(name="is_going")
 	private boolean isGoing;
 	
 	@Column(name="end_date")
-	private Date endDate;
+	private LocalDate endDate;
 	
 	@ManyToOne(targetEntity = Resume.class)
 	@JoinColumn(name="resume_id")

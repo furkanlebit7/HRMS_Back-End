@@ -36,6 +36,9 @@ public class Employer extends User{
 	@Column(name="company_logo")
 	private String companyLogo;
 	
+	@Column(name="company_banner")
+	private String companyBanner;
+	
 	
 	@OneToMany(mappedBy="employer")
 	private List<JobAdvertisement> jobAdvertisement;

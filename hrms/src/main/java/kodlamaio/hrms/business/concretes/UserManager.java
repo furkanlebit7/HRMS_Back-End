@@ -30,5 +30,14 @@ public class UserManager implements UserService{
 	public User add(User user) {
 		return userDao.save(user);
 	}
+
+
+	
+
+
+	@Override
+	public DataResult<User> getUserByEmail(String email) {
+		return new SuccessDataResult<User>(this.userDao.getUserByEmail(email));
+	}
 	
 }

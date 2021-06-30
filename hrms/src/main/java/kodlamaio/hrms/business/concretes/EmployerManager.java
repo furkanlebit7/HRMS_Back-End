@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.hibernate.hql.internal.ast.ErrorReporter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -168,6 +169,23 @@ public class EmployerManager implements EmployerService{
 		}
 		
 		return new ErrorResult("iki taraflı onay almamış");
+	}
+
+	@Override
+	public Result uploadBanner(MultipartFile file, int employerId) {
+
+		Map<String, String> uploader = (Map<String, String>) 
+				cloudinaryService.save(file).getData(); 
+		String imageUrl= uploader.get("url");
+		Employer employer = employerDao.getOne(employerId);
+		employer.setCompanyBanner(imageUrl);
+		employerDao.save(employer);
+		return new SuccessResult("Kayıt Başarılı");
+	}
+
+	@Override
+	public DataResult<List<Employer>> getEmployerThree() {
+		return new SuccessDataResult<List<Employer>>(this.employerDao.getJobAdvertisementFour(PageRequest.of(1, 3)),"Başarılı");
 	}
 	
 	

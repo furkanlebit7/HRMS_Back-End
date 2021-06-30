@@ -33,19 +33,17 @@ public class ResumeManager implements ResumeService{
 	private ResumeExperienceDao resumeExperienceDao;
 	private ResumeTechDao resumeTechDao;
 
-	private CloudinaryService cloudinaryService;
 
 	
 	@Autowired
 	public ResumeManager(ResumeDao resumeDao, ResumeSchoolDao resumeSchoolDao, ResumeLanguageDao resumeLanguageDao,
-			ResumeExperienceDao resumeExperienceDao, ResumeTechDao resumeTechDao, CloudinaryService cloudinaryService) {
+			ResumeExperienceDao resumeExperienceDao, ResumeTechDao resumeTechDao) {
 		super();
 		this.resumeDao = resumeDao;
 		this.resumeSchoolDao = resumeSchoolDao;
 		this.resumeLanguageDao = resumeLanguageDao;
 		this.resumeExperienceDao = resumeExperienceDao;
 		this.resumeTechDao = resumeTechDao;
-		this.cloudinaryService = cloudinaryService;
 	}
 
 	@Override
@@ -100,16 +98,14 @@ public class ResumeManager implements ResumeService{
 	}
 
 	@Override
-	public Result uploadImage(MultipartFile file, int resumeId) {
-
-		Map<String, String> uploader = (Map<String, String>) 
-				cloudinaryService.save(file).getData(); 
-		String imageUrl= uploader.get("url");
-		Resume Cv = resumeDao.getOne(resumeId);
-		Cv.setCandidatePhoto(imageUrl);
-		resumeDao.save(Cv);
-		return new SuccessResult("Kayıt Başarılı");
+	public Result updateResume(Resume resume) {
+		Resume ref = new Resume();
+		ref=resume;
+		this.resumeDao.save(ref);
+		return new SuccessResult("Güncelleme Başarılı");
 	}
+
+	
 
 }
 

@@ -26,4 +26,7 @@ public class Candidate extends User{
 	
 	@Column(name = "birth_date")
 	private Date birthDate;
+	
+	@Column(name = "photo")
+	private String photo;
 }

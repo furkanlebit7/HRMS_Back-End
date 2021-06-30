@@ -8,4 +8,5 @@ import kodlamaio.hrms.entities.concretes.User;
 public interface UserService {
 	DataResult<List<User>> getAll();
 	User add(User user);
+	DataResult<User> getUserByEmail(String email);
 }

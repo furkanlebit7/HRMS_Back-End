@@ -12,5 +12,5 @@ public interface ResumeService {
 	Result add(Resume resume);
 	DataResult<List<Resume>> getAll();
 	DataResult<List<Resume>> findByCandidateId(int id);
-	Result uploadImage(MultipartFile file, int resumeId);
+	Result updateResume(Resume resume);
 }

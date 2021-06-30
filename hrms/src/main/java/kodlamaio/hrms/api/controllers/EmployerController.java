@@ -43,11 +43,21 @@ public class EmployerController {
 	
 	@PutMapping("/uploadImage")
 	public Result saveImage(@RequestBody MultipartFile file,@RequestParam int employerId) {
-		return this.employerService.uploadImage(file, employerId);
-		
+		return this.employerService.uploadImage(file, employerId);	
 	}
+	@PutMapping("/uploadBanner")
+	public Result saveImageBanner(@RequestBody MultipartFile file,@RequestParam int employerId) {
+		return this.employerService.uploadBanner(file, employerId);	
+	}
+	
 	@GetMapping("/verifyChecker")
 	Result verifyChecker(Integer employerId) {
 		return this.employerService.verifyChecker(employerId);
 	}
+	
+	@GetMapping("/getThree")
+	public DataResult<List<Employer>> getThree(){
+		return this.employerService.getEmployerThree();
+	}
+	
 }

@@ -31,8 +31,6 @@ public class Resume {
 	@Column(name="candidate_id")
 	private int candidateId;
 	
-	@Column(name="candidate_photo")
-	private String candidatePhoto;
 	
 	@Column(name="candidate_github")
 	private String candidateGithub;
@@ -45,7 +43,6 @@ public class Resume {
 	
 	@Column(name="is_active")
 	private boolean is_Active;
-	
 	
 	@OneToMany(mappedBy = "resume",fetch = FetchType.LAZY)
 	private List<ResumeLanguage> resumeLanguages;
