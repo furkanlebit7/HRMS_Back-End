@@ -47,5 +47,12 @@ public class ResumeShcoolManager implements ResumeSchoolService{
 		this.resumeSchoolDao.save((ResumeSchools) dtoConvertService.dtoClassConverter(school, ResumeSchools.class));
 		return new SuccessResult("Okul Ekleme İşlemi Başarılır");
 	}
+
+
+	@Override
+	public Result removeById(int id) {
+		this.resumeSchoolDao.deleteById(id);
+		return new SuccessResult("Okul Silme işlemi başarılı");
+	}
 	
 }

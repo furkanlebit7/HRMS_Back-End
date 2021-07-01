@@ -1,6 +1,6 @@
 package kodlamaio.hrms.entities.concretes;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,12 +49,12 @@ public class ResumeExperience {
 		@Column(name="started_date")
 		@NotNull
 		@NotBlank
-		private Date startedDate;
+		private LocalDate startedDate;
 	
 		@Column(name="end_date")
 		@NotNull
 		@NotBlank
-		private Date endDate;
+		private LocalDate endDate;
 		
 		@NotNull
 		@Column(name="is_going")

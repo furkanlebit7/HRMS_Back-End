@@ -11,4 +11,5 @@ public interface ResumeSchoolService {
 	DataResult<List<ResumeSchools>> getAll();
 	Result add(ResumeSchoolsDto school);
 	DataResult<List<ResumeSchools>> findByResumeId(int id);
+	Result removeById(int id);
 }

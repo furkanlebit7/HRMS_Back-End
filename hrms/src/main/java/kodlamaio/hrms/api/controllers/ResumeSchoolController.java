@@ -45,4 +45,8 @@ public class ResumeSchoolController {
 		return this.resumeSchoolService.add(school);
 	}
 	
+	@GetMapping("/removeById")
+	Result removeById(@RequestParam int id) {
+		return this.resumeSchoolService.removeById(id);
+	}
 }

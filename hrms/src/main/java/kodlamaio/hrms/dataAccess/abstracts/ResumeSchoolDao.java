@@ -8,6 +8,5 @@ import kodlamaio.hrms.entities.concretes.ResumeSchools;
 
 public interface ResumeSchoolDao extends JpaRepository<ResumeSchools, Integer>{
 	List<ResumeSchools> findByResumeId(int id);
-	
 	ResumeSchools findById(int id);
 }
