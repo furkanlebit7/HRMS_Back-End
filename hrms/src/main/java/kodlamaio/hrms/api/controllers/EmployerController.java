@@ -60,4 +60,14 @@ public class EmployerController {
 		return this.employerService.getEmployerThree();
 	}
 	
+	@PostMapping("/updateEmployer")
+	public Result updateEmployer(@RequestBody Employer employer) {
+		return this.employerService.updateEmployer(employer);
+	}
+	
+	@PostMapping("updateNameEmail")
+	public Result updateNameEmail(@RequestParam int employerId,@RequestParam String companyName,@RequestParam String companyEmail) {
+		return this.employerService.updateNameEmail(employerId, companyName, companyEmail);
+	}
+	
 }

@@ -155,7 +155,7 @@ public class EmployerManager implements EmployerService{
 		Employer employer = employerDao.getOne(employerId);
 		employer.setCompanyLogo(imageUrl);
 		employerDao.save(employer);
-		return new SuccessResult("Kayıt Başarılı");
+		return new SuccessResult("Kayıt Başarılı"+uploader);
 	}
 
 	@Override
@@ -186,6 +186,24 @@ public class EmployerManager implements EmployerService{
 	@Override
 	public DataResult<List<Employer>> getEmployerThree() {
 		return new SuccessDataResult<List<Employer>>(this.employerDao.getJobAdvertisementFour(PageRequest.of(1, 3)),"Başarılı");
+	}
+
+	@Override
+	public Result updateEmployer(Employer employer) {
+		Employer ref = new Employer();
+		ref=employer;
+		employerDao.save(ref);
+		return new SuccessResult("Şirket update Başarılı");
+	}
+
+	@Override
+	public Result updateNameEmail(int employerId, String companyName, String companyEmail) {
+		Employer e = employerDao.getOne(employerId);
+		e.setCompanyName(companyName);
+		e.setEmail(companyEmail);
+		employerDao.save(e);
+		return new SuccessDataResult("Şirket adı ve maili güncellendi");
+		
 	}
 	
 	

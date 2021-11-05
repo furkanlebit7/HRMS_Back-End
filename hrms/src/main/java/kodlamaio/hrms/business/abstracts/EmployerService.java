@@ -15,4 +15,6 @@ public interface EmployerService {
 	Result uploadBanner(MultipartFile file, int employerId);
 	Result verifyChecker(Integer employerId);
 	DataResult<List<Employer>>getEmployerThree();
+	Result updateEmployer(Employer employer);
+	Result updateNameEmail(int employerId, String companyName,String companyEmail);
 }
